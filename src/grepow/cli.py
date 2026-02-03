@@ -1,13 +1,44 @@
 from __future__ import annotations
 
 import argparse
-import subprocess
+import asyncio
 import sys
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 
-from .core import clone_full, clone_sparse, fetch_hits, group_repos
+from tqdm import tqdm
+
+from .core import RepoFiles, clone_full, clone_sparse, fetch_hits, group_repos
 
 __all__ = ["main"]
+
+CloneFn = Callable[[RepoFiles, Path], Awaitable[str]]
+
+
+async def clone_all(
+    repos: list[RepoFiles],
+    target: Path,
+    clone_fn: CloneFn,
+    jobs: int,
+) -> None:
+    """Clone repos concurrently with bounded parallelism."""
+    sem = asyncio.Semaphore(jobs)
+    pbar = tqdm(total=len(repos), unit="repo")
+
+    async def task(repo: RepoFiles) -> None:
+        async with sem:
+            try:
+                msg = await clone_fn(repo, target)
+                pbar.set_postfix_str(msg)
+            except RuntimeError as e:
+                pbar.set_postfix_str(f"{repo.owner_repo}: FAILED")
+                print(f"\n{repo.owner_repo}: {e}", file=sys.stderr)
+            pbar.update()
+
+    try:
+        await asyncio.gather(*(task(r) for r in repos))
+    finally:
+        pbar.close()
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -20,6 +51,7 @@ def main(argv: list[str] | None = None) -> int:
         "--full", action="store_true", help="Full clone instead of sparse"
     )
     parser.add_argument("--max-pages", type=int, default=10, help="Max result pages")
+    parser.add_argument("-j", "--jobs", type=int, default=8, help="Parallel clones")
     args = parser.parse_args(argv)
 
     print(f"Searching grep.app: {args.query!r}")
@@ -36,14 +68,5 @@ def main(argv: list[str] | None = None) -> int:
     args.target.mkdir(parents=True, exist_ok=True)
     clone_fn = clone_full if args.full else clone_sparse
 
-    for repo in repos:
-        print(f"{repo.owner_repo}:")
-        try:
-            clone_fn(repo, args.target)
-        except subprocess.CalledProcessError as e:
-            print(
-                f"  FAILED: {e.stderr.decode().strip() if e.stderr else e}",
-                file=sys.stderr,
-            )
-
+    asyncio.run(clone_all(repos, args.target, clone_fn, args.jobs))
     return 0

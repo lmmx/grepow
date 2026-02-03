@@ -1,7 +1,7 @@
 [project]
 name = "grepow"
 version = "0.1.0"
-description = "Add your description here"
+description = "CLI for sparse checkouts of results from grep.app repo search"
 readme = "README.md"
 authors = [
     { name = "Louis Maddox", email = "louismmx@gmail.com" }
@@ -9,6 +9,7 @@ authors = [
 requires-python = ">=3.10,<3.14"
 dependencies = [
     "httpx>=0.28.1",
+    "tqdm>=4.67.2",
 ]
 
 [project.scripts]
