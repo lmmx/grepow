@@ -1,10 +1,44 @@
+[build-system]
+build-backend = "uv_build"
+requires = ["uv_build>=0.9.26,<0.10.0"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.1.0",
+]
+test = [
+    "pytest>=8.4.0",
+]
+
 [project]
 name = "grepow"
 version = "0.1.0"
 description = "CLI for sparse checkouts of results from grep.app repo search"
 readme = "README.md"
 authors = [
-    { name = "Louis Maddox", email = "louismmx@gmail.com" }
+    {email = "louismmx@gmail.com", name = "Louis Maddox"},
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+keywords = [
+    "cli",
+    "git",
+    "grep",
+    "search",
+    "sparse-checkout",
 ]
 requires-python = ">=3.10,<3.14"
 dependencies = [
@@ -12,9 +46,33 @@ dependencies = [
     "tqdm>=4.67.2",
 ]
 
+[project.license]
+text = "MIT"
+
 [project.scripts]
 grepow = "grepow:main"
 
-[build-system]
-requires = ["uv_build>=0.9.26,<0.10.0"]
-build-backend = "uv_build"
+[project.urls]
+Homepage = "https://github.com/lmmx/grepow"
+Repository = "https://github.com/lmmx/grepow.git"
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+addopts = "-v"
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+ignore = ["C408", "C901", "E501", "E722", "E741"]
+select = ["C", "E", "F", "I", "UP", "W"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["grepow"]
+lines-after-imports = 2
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["E401", "F401"]
+
+[tool.uv]
+default-groups = ["dev", "test"]

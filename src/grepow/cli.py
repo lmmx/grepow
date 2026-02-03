@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from .core import RepoFiles, clone_full, clone_sparse, fetch_hits, group_repos
 
+
 __all__ = ["main"]
 
 CloneFn = Callable[[RepoFiles, Path], Awaitable[str]]

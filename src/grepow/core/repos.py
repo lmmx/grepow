@@ -6,6 +6,7 @@ from urllib.parse import quote_plus
 
 import httpx
 
+
 __all__ = ["RepoFiles", "fetch_hits", "group_repos"]
 
 
