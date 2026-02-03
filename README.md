@@ -18,11 +18,12 @@ uv pip install grepow
 - Python 3.10+
 - Git (with sparse-checkout support)
 
-## About
+## Glossary
 
-- **grep.app search**: Uses the grep.app API to fetch search results
-- **Sparse checkouts**: Clones only the files matching your search hits from the matching repos
-- **Group hits by repo**: Aggregates multiple hits per repository from search results
+- **grep.app**: A search engine that indexes GitHub's popular projects (typically those with at
+  least a handful of stars) with an API. Try it out at [grep.app](https://grep.app/) for a sense of what it gives you.
+- **Sparse checkout**: When git clones only the files matching a 'filter'. We use this to isolate just the search hits from the repos in the results list.
+- **Grouped hits**: Rather than somehow having individual search results (files) in separate repo copies, we aggregate multiple hits per repo into a single 'filter set'
 
 ## Usage
 
