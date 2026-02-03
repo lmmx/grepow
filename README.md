@@ -18,28 +18,23 @@ uv pip install grepow
 - Python 3.10+
 - Git (with sparse-checkout support)
 
-## Features
+## About
 
-- **Smart sparse checkouts**: Clone only the files matching your search hits, not entire repos
-- **grep.app integration**: Uses the grep.app API to fetch search results
-- **Grouped by repo**: Aggregates hits per repository and applies sparse-checkout filters
-- **Optional full clone**: Fall back to full repository cloning when needed
+- **grep.app search**: Uses the grep.app API to fetch search results
+- **Sparse checkouts**: Clones only the files matching your search hits from the matching repos
+- **Group hits by repo**: Aggregates multiple hits per repository from search results
 
 ## Usage
 
+To search and sparse checkout matching files:
+
 ```sh
-# Search and sparse checkout matching files
 grepow "your search query" repo_dirs
-# Full clone instead of sparse checkout
-grepow "your search query" repo_dirs --full
 ```
 
-### How it works
+The results will be saved to `repo_dirs` (created if it doesn't exist), cloned into subdirs.
 
-1.  Queries the grep.app API with your search term
-2.  Groups matching files by repository
-3.  Clones each repository with `git sparse-checkout`
-4.  Applies filter cones for just the matched file paths
+Alternatively, for full repos, pass the `--full` flag.
 
 ## Contributing
 
