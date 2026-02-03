@@ -12,7 +12,7 @@ test = [
 
 [project]
 name = "grepow"
-version = "0.1.0"
+version = "0.1.1"
 description = "CLI for sparse checkouts of results from grep.app repo search"
 readme = "README.md"
 authors = [
